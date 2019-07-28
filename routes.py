@@ -43,7 +43,7 @@ def login():
 			email = form.email.data
 			password = form.password.data
 
-			user = User.query.filter(email=email).first()
+			user = User.query.filter_by(email=email).first()
 			if user is not None and user.check_password(password):
 				session['email'] = form.email.data
 				return redirect(url_for('home'))
@@ -54,9 +54,11 @@ def login():
 
 @app.route('/home', methods=['GET', 'POST'])
 def home():
+	if 'email' not in session:
+		return redirect(url_for('login'))
 	return render_template('home.html')
 
-@app.route('logout')
+@app.route('/logout')
 def logout():
 	session.pop('email', None)
 	return redirect(url_for('index'))
