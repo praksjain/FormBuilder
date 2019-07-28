@@ -4,8 +4,8 @@ from forms import SignupForm
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost/postgres'
-db = db.init_app(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:Adinath$1008@localhost:5432/postgres'
+db.init_app(app)
 app.secret_key = 'development-key'
 
 @app.route('/')
@@ -16,7 +16,7 @@ def index():
 def about():
 	return render_template('about.html')
 
-@app.route('/signup')
+@app.route('/signup', methods=['GET', 'POST'])
 def signup():
 	form = SignupForm()
 
@@ -24,7 +24,7 @@ def signup():
 		if form.validate() == False:
 			return render_template('signup.html', form=form)
 		else:
-			newuser = User(form.firstname.data, form.lastname.data, form.email.data, form.password.data)
+			newuser = User(form.first_name.data, form.last_name.data, form.email.data, form.password.data)
 			db.session.add(newuser)
 			db.session.commit()
 			return 'Success..!!'
